@@ -66,7 +66,10 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
     }
 
     final public void setValue(int value) throws ModbusNumberException {
-        this.value = ((short) value) & 0xffff;
+        // this.value = ((short) value) & 0xffff;
+        // flipping the bytes of the quantity property
+        short asd = (short) value;
+        this.value = ((asd >> 8) | (asd << 8)) & 0xFFFF;
         if (!checkValue())
             throw new ModbusNumberException("Error in register value", value);
     }
