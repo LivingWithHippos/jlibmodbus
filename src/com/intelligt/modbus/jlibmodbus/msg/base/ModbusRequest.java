@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import static com.intelligt.modbus.jlibmodbus.utils.ModbusFunctionCode.WRITE_MULTIPLE_REGISTERS;
+import static com.intelligt.modbus.jlibmodbus.utils.ModbusFunctionCode.WRITE_SINGLE_REGISTER;
+
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]
@@ -98,8 +101,11 @@ abstract public class ModbusRequest extends ModbusMessage implements ModbusMessa
             throw new ModbusNumberException("Does not matches the slave address", msg.getServerAddress());
         if (getFunction() != msg.getFunction())
             throw new ModbusNumberException("Does not matches the function code", msg.getFunction());
+        /*
+         bypass wrong bytes position being checked
+         */
         if (!msg.isException()) {
-            if (!validateResponseImpl(msg))
+            if (getFunction() != WRITE_SINGLE_REGISTER.toInt() && getFunction() != WRITE_MULTIPLE_REGISTERS.toInt() && !validateResponseImpl(msg))
                 throw new ModbusNumberException("Collision: response does not matches the request");
         }
     }

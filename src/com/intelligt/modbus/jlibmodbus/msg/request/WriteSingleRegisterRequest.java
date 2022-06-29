@@ -67,6 +67,16 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
             return false;
         }
         WriteSingleRegisterResponse r = (WriteSingleRegisterResponse) response;
+        /*
+        alternative to avoiding this check we can reset the starting address
+        if (r.getStartAddress() != getStartAddress()) {
+            try {
+                r.setStartAddress(getStartAddress());
+            } catch (ModbusNumberException e) {
+                throw new RuntimeException(e);
+            }
+        }
+         */
         return r.getStartAddress() == getStartAddress() && r.getValue() == getValue();
     }
 
